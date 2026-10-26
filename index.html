@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HERNÁN BUCCINO — Film Editing, Motion Direction & AI Craft | HB Creative Studio LLC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300&display=swap" rel="stylesheet">
+
+  <style>
+    :root[data-theme="dark"] {
+      --bg: #070707;
+      --surface: #0e0e0e;
+      --fg: #f4f4f4;
+      --muted: #6e6e6e;
+      --line: rgba(255, 255, 255, 0.11);
+      --line-strong: rgba(255, 255, 255, 0.35);
+      --accent: #ffffff;
+      --overlay: rgba(7, 7, 7, 0.96);
+    }
+
+    :root[data-theme="light"] {
+      --bg: #f7f7f5;
+      --surface: #ededeb;
+      --fg: #080808;
+      --muted: #686868;
+      --line: rgba(0, 0, 0, 0.1);
+      --line-strong: rgba(0, 0, 0, 0.4);
+      --accent: #000000;
+      --overlay: rgba(247, 247, 245, 0.96);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: 'Poppins', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      transition: background-color 0.4s ease, color 0.4s ease;
+    }
+
+    body::before {
+      content: "";
+      position: fixed; inset: 0; pointer-events: none; z-index: 9999; opacity: 0.028;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    .custom-cursor {
+      position: fixed; top: 0; left: 0; width: 12px; height: 12px; background: #ffffff; border-radius: 50%;
+      pointer-events: none; z-index: 10000; mix-blend-mode: difference; transform: translate(-50%, -50%);
+      transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1), height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .custom-cursor span { font-size: 9px; font-weight: 600; letter-spacing: 0.14em; color: #000; opacity: 0; transition: opacity 0.2s ease; text-transform: uppercase; }
+    .custom-cursor.is-hovering { width: 84px; height: 84px; }
+    .custom-cursor.is-hovering span { opacity: 1; }
+    @media (pointer: coarse) { .custom-cursor { display: none; } }
+
+    .topbar {
+      position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 1px solid var(--line);
+      display: grid; grid-template-columns: 1.4fr 2.2fr 1.4fr; align-items: center; padding: 18px 36px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .brand-mark { font-weight: 600; font-size: 13px; letter-spacing: 0.08em; display: flex; align-items: center; gap: 10px; }
+    .brand-sub { font-weight: 300; font-size: 10px; color: var(--muted); margin-left: 4px; }
+    .status-dot { width: 6px; height: 6px; background-color: var(--fg); border-radius: 50%; animation: pulse 2.4s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+
+    .topbar-meta { color: var(--muted); display: flex; gap: 28px; }
+    .topbar-meta strong { color: var(--fg); font-weight: 500; }
+    .topbar-actions { display: flex; justify-content: flex-end; align-items: center; gap: 10px; }
+
+    .top-btn {
+      background: none; border: 1px solid var(--line); color: var(--fg); font-family: inherit; font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; padding: 7px 12px; cursor: pointer; transition: all 0.25s ease;
+    }
+    .top-btn:hover, .top-btn.solid { border-color: var(--fg); background: var(--fg); color: var(--bg); }
+    .top-btn.solid:hover { background: transparent; color: var(--fg); }
+
+    .hero { border-bottom: 1px solid var(--line); padding: 52px 36px 48px; }
+    .credentials-pill-row { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; flex-wrap: wrap; }
+    .fiap-badge {
+      display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--line-strong); padding: 6px 14px; font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg); background: var(--surface); text-decoration: none; cursor: pointer;
+    }
+    .fiap-emblem { width: 14px; height: 14px; fill: currentColor; }
+    .experience-tag { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+
+    .hero-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; flex-wrap: wrap; }
+    .hero-title { font-size: clamp(38px, 6vw, 92px); font-weight: 300; line-height: 0.96; letter-spacing: -0.04em; text-transform: uppercase; }
+    .hero-title strong { font-weight: 600; display: block; }
+
+    .hero-statement { max-width: 450px; font-size: 13px; line-height: 1.65; font-weight: 300; color: var(--muted); }
+    .hero-statement b { color: var(--fg); font-weight: 500; }
+
+    .showreel-banner {
+      position: relative; width: 100%; height: 128px; border-bottom: 1px solid var(--line); overflow: hidden; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 0 36px; background: #000; transition: height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .showreel-banner:hover { height: 156px; }
+    .showreel-banner.is-hidden { height: 0; border-bottom: none; }
+    .banner-bg-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.28; filter: grayscale(100%) contrast(1.2); pointer-events: none; }
+    .banner-left, .banner-right { position: relative; z-index: 2; display: flex; align-items: center; gap: 20px; color: #ffffff; }
+    .play-icon-box { width: 44px; height: 44px; border: 1px solid rgba(255, 255, 255, 0.5); display: flex; align-items: center; justify-content: center; font-size: 12px; }
+    .showreel-banner:hover .play-icon-box { background: #ffffff; color: #000; border-color: #ffffff; }
+    .banner-label-group { display: flex; flex-direction: column; gap: 2px; }
+    .banner-kicker { font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255, 255, 255, 0.65); }
+    .banner-heading { font-size: clamp(16px, 2vw, 24px); font-weight: 500; letter-spacing: -0.02em; text-transform: uppercase; }
+    .banner-specs { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255, 255, 255, 0.75); border: 1px solid rgba(255, 255, 255, 0.25); padding: 8px 16px; }
+
+    .showreel-drawer { max-height: 0; overflow: hidden; background: #050505; color: #f4f4f4; border-bottom: 0px solid var(--line); transition: max-height 0.75s cubic-bezier(0.16, 1, 0.3, 1); }
+    .showreel-drawer.is-open { max-height: 1100px; border-bottom-width: 1px; }
+    .drawer-inner { padding: 32px 36px 40px; max-width: 1540px; margin: 0 auto; }
+    .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; }
+    .close-reel-btn { background: #fff; color: #000; border: 1px solid #fff; font-family: inherit; font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; padding: 8px 18px; cursor: pointer; }
+    .reel-video-frame { width: 100%; aspect-ratio: 16 / 9; max-height: 74vh; background: #000; border: 1px solid rgba(255, 255, 255, 0.15); overflow: hidden; }
+    .reel-video-frame iframe { width: 100%; height: 100%; border: none; display: block; }
+
+    .control-strip { display: flex; justify-content: space-between; align-items: center; padding: 0 36px; border-bottom: 1px solid var(--line); background: var(--bg); position: sticky; top: 55px; z-index: 90; }
+    .filter-nav { display: flex; overflow-x: auto; }
+    .filter-tab { background: none; border: none; border-right: 1px solid var(--line); color: var(--muted); font-family: inherit; font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; padding: 18px 26px; cursor: pointer; position: relative; white-space: nowrap; }
+    .filter-tab:first-child { padding-left: 0; }
+    .filter-tab sup { font-size: 9px; margin-left: 4px; opacity: 0.6; }
+    .filter-tab:hover, .filter-tab.active { color: var(--fg); }
+    .filter-tab.active::after { content: ""; position: absolute; bottom: -1px; left: 0; width: 100%; height: 2px; background: var(--fg); }
+
+    .density-controls { display: flex; align-items: center; gap: 16px; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    .density-btn { background: none; border: 1px solid var(--line); color: var(--muted); font-family: inherit; font-size: 10px; padding: 5px 10px; cursor: pointer; }
+    .density-btn.active, .density-btn:hover { color: var(--fg); border-color: var(--fg); }
+
+    .work-grid { display: grid; grid-template-columns: repeat(2, 1fr); border-bottom: 1px solid var(--line); transition: all 0.4s ease; }
+    .work-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+    .work-grid.is-dimmed .project-cell:not(:hover) { opacity: 0.32; }
+
+    .project-cell { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 28px 36px 32px; display: flex; flex-direction: column; gap: 16px; cursor: pointer; position: relative; transition: opacity 0.4s ease; }
+    .project-cell.hidden { display: none; }
+    .cell-header { display: flex; justify-content: space-between; align-items: center; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+    .cell-index { font-weight: 600; color: var(--fg); }
+
+    .viewport-window { position: relative; width: 100%; aspect-ratio: 16 / 9; background: var(--surface); overflow: hidden; }
+    .viewport-window video { width: 100%; height: 100%; object-fit: cover; display: block; filter: contrast(1.03); transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+    .project-cell:hover .viewport-window video { transform: scale(1.045); }
+
+    .live-badge { position: absolute; top: 22px; left: 24px; z-index: 4; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); color: #fff; font-size: 9px; font-weight: 500; letter-spacing: 0.14em; padding: 4px 9px; opacity: 0; transform: translateY(-4px); transition: all 0.25s ease; }
+    .project-cell:hover .live-badge { opacity: 1; transform: translateY(0); }
+
+    .scrubber-track { position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: rgba(255,255,255,0.15); z-index: 4; opacity: 0; transition: opacity 0.25s ease; }
+    .project-cell:hover .scrubber-track { opacity: 1; }
+    .scrubber-fill { height: 100%; width: 0%; background: #ffffff; transition: width 0.1s linear; }
+
+    .cell-footer { display: flex; justify-content: space-between; align-items: flex-end; padding-top: 4px; }
+    .project-title { font-size: 18px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.2; }
+    .project-client { font-size: 12px; font-weight: 300; color: var(--muted); margin-top: 3px; }
+    .expand-trigger { font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid transparent; padding-bottom: 2px; }
+    .project-cell:hover .expand-trigger { color: var(--fg); border-bottom-color: var(--fg); }
+
+    .clients-section { border-bottom: 1px solid var(--line); padding: 40px 36px; }
+    .clients-header { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 24px; }
+    .clients-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+    .client-box { background: var(--bg); padding: 24px 16px; text-align: center; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; justify-content: center; }
+    .client-box:hover { color: var(--fg); background: var(--surface); }
+
+    .recognition-band { display: grid; grid-template-columns: 1fr 2fr 1fr; border-bottom: 1px solid var(--line); padding: 44px 36px; gap: 32px; align-items: center; }
+    .rec-kicker { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+    .rec-main { font-size: clamp(18px, 2.2vw, 28px); font-weight: 400; letter-spacing: -0.02em; line-height: 1.3; }
+    .rec-main strong { font-weight: 600; }
+    .rec-detail { font-size: 12px; color: var(--muted); line-height: 1.6; font-weight: 300; text-align: right; }
+
+    footer { padding: 48px 36px; display: grid; grid-template-columns: 1.5fr 1.5fr 1fr; gap: 24px; align-items: end; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+    .footer-col { display: flex; flex-direction: column; gap: 6px; }
+    .footer-col strong { color: var(--fg); font-weight: 500; }
+    .footer-socials { display: flex; gap: 16px; margin-top: 4px; }
+    .footer-socials a { color: var(--muted); text-decoration: none; border-bottom: 1px solid transparent; }
+    .footer-socials a:hover { color: var(--fg); border-color: var(--fg); }
+    .footer-right { text-align: right; display: flex; flex-direction: column; gap: 6px; }
+    .footer-link { color: var(--fg); text-decoration: none; border-bottom: 1px solid var(--line-strong); align-self: flex-end; padding-bottom: 2px; cursor: pointer; }
+
+    .screening-room {
+      position: fixed; inset: 0; z-index: 2000; background: var(--overlay); backdrop-filter: blur(16px);
+      display: none; flex-direction: column; justify-content: space-between; padding: 28px 36px; opacity: 0; transition: opacity 0.35s ease;
+    }
+    .screening-room.active { display: flex; opacity: 1; }
+    .screening-topbar { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); padding-bottom: 18px; }
+    .screening-index { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+    .screening-controls { display: flex; gap: 12px; }
+    .modal-btn { background: none; border: 1px solid var(--line); color: var(--fg); font-family: inherit; font-size: 10px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; padding: 8px 16px; cursor: pointer; }
+    .modal-btn:hover { border-color: var(--fg); background: var(--fg); color: var(--bg); }
+
+    .screening-stage { display: grid; grid-template-columns: 3fr 1fr; gap: 40px; align-items: center; margin: auto 0; padding: 24px 0; }
+    .stage-player { width: 100%; background: #000; border: 1px solid var(--line); position: relative; aspect-ratio: 16 / 9; max-height: 74vh; display: flex; justify-content: center; overflow: hidden; }
+    .stage-player iframe { width: 100%; height: 100%; border: none; display: block; }
+
+    .stage-dossier { border-left: 1px solid var(--line); padding-left: 32px; display: flex; flex-direction: column; gap: 24px; }
+    .dossier-label { font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .dossier-value { font-size: 14px; font-weight: 400; }
+    .dossier-title { font-size: 26px; font-weight: 500; letter-spacing: -0.03em; line-height: 1.15; }
+
+    .contact-modal {
+      position: fixed; inset: 0; z-index: 2500; background: var(--overlay); backdrop-filter: blur(12px); display: none; align-items: center; justify-content: center; padding: 24px;
+    }
+    .contact-modal.active { display: flex; }
+    .contact-card { background: var(--bg); border: 1px solid var(--line-strong); width: 100%; max-width: 540px; padding: 48px; position: relative; display: flex; flex-direction: column; gap: 24px; }
+    .contact-card h3 { font-size: 24px; font-weight: 500; letter-spacing: -0.02em; text-transform: uppercase; }
+    .contact-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .contact-card a.mail-cta { display: inline-block; background: var(--fg); color: var(--bg); text-decoration: none; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; padding: 16px 24px; text-align: center; }
+    .contact-socials-row { display: flex; gap: 20px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; }
+    .contact-socials-row a { color: var(--fg); text-decoration: none; border-bottom: 1px solid var(--line-strong); padding-bottom: 2px; }
+    .close-contact { position: absolute; top: 24px; right: 24px; background: none; border: 1px solid var(--line); color: var(--fg); font-family: inherit; font-size: 10px; padding: 6px 12px; cursor: pointer; }
+
+    @media (max-width: 1024px) {
+      .work-grid, .work-grid.cols-3, .recognition-band, footer, .clients-grid { grid-template-columns: 1fr; }
+      .rec-detail, .footer-right { text-align: left; }
+      .footer-link { align-self: flex-start; }
+      .screening-stage { grid-template-columns: 1fr; }
+      .stage-dossier { border-left: none; border-top: 1px solid var(--line); padding-left: 0; padding-top: 20px; }
+      .topbar { grid-template-columns: 1fr 1fr; }
+      .topbar-meta, .banner-specs { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="custom-cursor" id="cursor"><span id="cursorLabel">EXPAND</span></div>
+
+  <header class="topbar">
+    <div class="brand-mark">
+      <span class="status-dot"></span>
+      <span data-i18n="brandName">HERNÁN BUCCINO</span> <span class="brand-sub">/ HB CREATIVE STUDIO</span>
+    </div>
+    <div class="topbar-meta">
+      <span>EST. <strong>2005 — 2026</strong></span>
+      <span><span data-i18n="juryLabel">HONOR</span>: <strong>JURADO FIAP</strong></span>
+      <span>LOC: <strong>US / BA</strong></span>
+    </div>
+    <div class="topbar-actions">
+      <button class="top-btn" id="langToggleBtn">EN / ES</button>
+      <button class="top-btn solid" id="topReelBtn">▶ REEL</button>
+      <button class="top-btn" id="themeToggle">🌓</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="credentials-pill-row">
+      <a href="https://www.fiapawards.com" target="_blank" rel="noopener" class="fiap-badge">
+        <svg class="fiap-emblem" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <span data-i18n="fiapBadgeText">JURADO OFICIAL FIAP — FESTIVAL IBEROAMERICANO DE LA PUBLICIDAD ↗</span>
+      </a>
+      <span class="experience-tag" data-i18n="expTag">· 21+ YEARS OF AUDIOVISUAL DIRECTION & POST-PRODUCTION</span>
+    </div>
+
+    <div class="hero-top">
+      <h1 class="hero-title" data-i18n="heroTitle">
+        VISUAL RHYTHM.<br>
+        <strong>21 YEARS IN MOTION.</strong>
+      </h1>
+      <p class="hero-statement" data-i18n="heroStatement">
+        Dirección de postproducción, montaje publicitario, motion design y pipelines de <b>Inteligencia Artificial Generativa</b>. Más de dos décadas transformando narrativa audiovisual y evaluando la excelencia creativa internacional como <b>Jurado de FIAP</b>.
+      </p>
+    </div>
+  </section>
+
+  <!-- FRANJA SHOWREEL GENERAL -->
+  <div class="showreel-banner" id="showreelBanner">
+    <video class="banner-bg-video" autoplay muted loop playsinline
+           src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"></video>
+    
+    <div class="banner-left">
+      <div class="play-icon-box">▶</div>
+      <div class="banner-label-group">
+        <span class="banner-kicker" data-i18n="reelKicker">FEATURED ANTHOLOGY · 2005—2026</span>
+        <span class="banner-heading" data-i18n="reelHeading">Watch Director's Cut General Showreel</span>
+      </div>
+    </div>
+
+    <div class="banner-right">
+      <span class="banner-specs" data-i18n="reelSpecs">FULL AUDIO · 01:45 MIN · CLICK TO EXPAND ↓</span>
+    </div>
+  </div>
+
+  <section class="showreel-drawer" id="showreelDrawer">
+    <div class="drawer-inner">
+      <div class="drawer-header">
+        <div>
+          <strong style="color:#fff;">DIRECTOR'S CUT SHOWREEL (2026)</strong>
+          <span style="color:#777; margin-left: 12px;">— VIMEO STREAMING</span>
+        </div>
+        <button class="close-reel-btn" id="closeReelDrawer">CLOSE REEL [↑]</button>
+      </div>
+
+      <div class="reel-video-frame">
+        <iframe id="mainReelIframe" src="https://player.vimeo.com/video/234793553?title=0&byline=0&portrait=0&badge=0&controls=1&color=ffffff&autopause=0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+      </div>
+    </div>
+  </section>
+
+  <div class="control-strip">
+    <nav class="filter-nav">
+      <button class="filter-tab active" data-filter="all">INDEX <sup>06</sup></button>
+      <button class="filter-tab" data-filter="commercial">COMMERCIALS <sup>03</sup></button>
+      <button class="filter-tab" data-filter="ai">GEN-AI LAB / MUVIA <sup>02</sup></button>
+      <button class="filter-tab" data-filter="motion">MOTION DESIGN <sup>02</sup></button>
+      <button class="filter-tab" data-filter="vertical">VERTICAL 9:16 <sup>01</sup></button>
+    </nav>
+    <div class="density-controls">
+      <span>GRID:</span>
+      <button class="density-btn active" id="grid2Btn">02 COL</button>
+      <button class="density-btn" id="grid3Btn">03 COL</button>
+    </div>
+  </div>
+
+  <main class="work-grid" id="workGrid">
+    
+    <!-- PROYECTO 01: ME CONTRO TE -->
+    <article class="project-cell" data-category="commercial editorial" data-aspect="16:9" data-index="01 / 06" 
+             data-title="Me contro Te — High-Retention Edit" 
+             data-client="Me contro Te (Italy — 7M+ Subs)" 
+             data-role="Video Editor & Retention Specialist" 
+             data-stack="Premiere Pro · Advanced Pacing · Sound Design" 
+             data-video-url="https://player.vimeo.com/video/441553028?title=0&byline=0&portrait=0&badge=0&controls=1&color=ffffff">
+      <div class="cell-header"><span class="cell-index">01</span><span>YOUTUBE / RETENTION EDIT</span><span>TC 00:00:45:00</span></div>
+      <div class="viewport-window">
+        <span class="live-badge">● PREVIEWING</span>
+        <video muted loop playsinline preload="auto" 
+               poster="https://vumbnail.com/441553028.jpg"
+               src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"></video>
+        <div class="scrubber-track"><div class="scrubber-fill"></div></div>
+      </div>
+      <div class="cell-footer"><div><h2 class="project-title">Me contro Te — Creator Edit</h2><p class="project-client">Me contro Te (7M+ Subs) — Italy</p></div><span class="expand-trigger">OPEN SCREENING ↗</span></div>
+    </article>
+
+    <!-- PROYECTO 02: BENJA CALERO -->
+    <article class="project-cell" data-category="commercial editorial" data-aspect="16:9" data-index="02 / 06" 
+             data-title="Benja Calero — Hotel sin Paredes" 
+             data-client="Benja Calero (29M+ Subs)" 
+             data-role="Editor & Storytelling Director" 
+             data-stack="Premiere Pro · YouTube Optimization" 
+             data-video-url="https://player.vimeo.com/video/1239368490?title=0&byline=0&portrait=0&badge=0&controls=1&color=ffffff">
+      <div class="cell-header"><span class="cell-index">02</span><span>YOUTUBE / EDITORIAL</span><span>TC 00:00:30:00</span></div>
+      <div class="viewport-window">
+        <span class="live-badge">● PREVIEWING</span>
+        <video muted loop playsinline preload="auto" 
+               poster="https://vumbnail.com/1239368490.jpg"
+               src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"></video>
+        <div class="scrubber-track"><div class="scrubber-fill"></div></div>
+      </div>
+      <div class="cell-footer"><div><h2 class="project-title">Hotel sin Paredes</h2><p class="project-client">Benja Calero (29M+ Subs)</p></div><span class="expand-trigger">OPEN SCREENING ↗</span></div>
+    </article>
+
+    <!-- PROYECTO 03 -->
+    <article class="project-cell" data-category="commercial" data-aspect="16:9" data-index="03 / 06" 
+             data-title="CookUnity — US Commercial Campaign" data-client="CookUnity" data-role="Film Editing & Color Grading" data-stack="Premiere Pro · DaVinci Resolve" 
+             data-video-url="https://player.vimeo.com/video/234793553?title=0&byline=0&portrait=0&badge=0&controls=1&color=ffffff">
+      <div class="cell-header"><span class="cell-index">03</span><span>COMMERCIAL EDIT</span><span>TC 00:00:30:00</span></div>
+      <div class="viewport-window">
+        <span class="live-badge">● PREVIEWING</span>
+        <video muted loop playsinline preload="auto" 
+               poster="https://vumbnail.com/234793553.jpg"
+               src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"></video>
+        <div class="scrubber-track"><div class="scrubber-fill"></div></div>
+      </div>
+      <div class="cell-footer"><div><h2 class="project-title">Chef-Crafted Stories</h2><p class="project-client">CookUnity — Commercial Post-Production</p></div><span class="expand-trigger">OPEN SCREENING ↗</span></div>
+    </article>
+
+    <!-- PROYECTO 04 -->
+    <article class="project-cell" data-category="ai motion" data-aspect="16:9" data-index="04 / 06" 
+             data-title="Hybrid AI + 2D/3D Motion Reel" data-client="Muvia Showreel" data-role="Creative Direction & Post-Production" data-stack="Seedance · Magnific · After Effects" 
+             data-video-url="https://player.vimeo.com/video/234793553?title=0&byline=0&portrait=0&badge=0&controls=1&color=ffffff">
+      <div class="cell-header"><span class="cell-index">04</span><span>SHOWREEL / HYBRID AI</span><span>TC 00:01:40:15</span></div>
+      <div class="viewport-window">
+        <span class="live-badge">● PREVIEWING</span>
+        <video muted loop playsinline preload="auto" 
+               poster="https://vumbnail.com/234793553.jpg"
+               src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoy.mp4"></video>
+        <div class="scrubber-track"><div class="scrubber-fill"></div></div>
+      </div>
+      <div class="cell-footer"><div><h2 class="project-title">Muvia — Generative Anthology</h2><p class="project-client">AI Audiovisual Production</p></div><span class="expand-trigger">OPEN SCREENING ↗</span></div>
+    </article>
+
+    <!-- PROYECTO 05 -->
+    <article class="project-cell" data-category="commercial" data-aspect="16:9" data-index="05 / 06" 
+             data-title="BSR Digital — Performance Campaigns" data-client="BSR Digital" data-role="Post-Production & Motion Graphics" data-stack="Premiere Pro · After Effects" 
+             data-video-url="https://player.vimeo.com/video/234793553?title=0&byline=0&portrait=0&badge=0&controls=1&color=ffffff">
+      <div class="cell-header"><span class="cell-index">05</span><span>COMMERCIAL</span><span>TC 00:00:45:10</span></div>
+      <div class="viewport-window">
+        <span class="live-badge">● PREVIEWING</span>
+        <video muted loop playsinline preload="auto" 
+               poster="https://vumbnail.com/234793553.jpg"
+               src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4"></video>
+        <div class="scrubber-track"><div class="scrubber-fill"></div></div>
+      </div>
+      <div class="cell-footer"><div><h2 class="project-title">Global Digital Spots</h2><p class="project-client">BSR Digital — High-Impact Commercials</p></div><span class="expand-trigger">OPEN SCREENING ↗</span></div>
+    </article>
+
+    <!-- PROYECTO 06 -->
+    <article class="project-cell" data-category="vertical motion" data-aspect="16:9" data-index="06 / 06" 
+             data-title="High-Retention Vertical Systems" data-client="International Creators & Brands" data-role="Executive Post-Production" data-stack="Premiere Pro · Automated AE Pipelines" 
+             data-video-url="https://player.vimeo.com/video/234793553?title=0&byline=0&portrait=0&badge=0&controls=1&color=ffffff">
+      <div class="cell-header"><span class="cell-index">06</span><span>SHORT-FORM ARCHITECTURE</span><span>TC 00:00:58:00</span></div>
+      <div class="viewport-window">
+        <span class="live-badge">● PREVIEWING</span>
+        <video muted loop playsinline preload="auto" 
+               poster="https://vumbnail.com/234793553.jpg"
+               src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4"></video>
+        <div class="scrubber-track"><div class="scrubber-fill"></div></div>
+      </div>
+      <div class="cell-footer"><div><h2 class="project-title">Dynamic Vertical Pacing</h2><p class="project-client">Short-Form Agency Pipeline</p></div><span class="expand-trigger">OPEN SCREENING ↗</span></div>
+    </article>
+  </main>
+
+  <section class="clients-section">
+    <div class="clients-header" data-i18n="clientsHeader">SELECTED CLIENTS & STRATEGIC PARTNERS</div>
+    <div class="clients-grid">
+      <div class="client-box">OGILVY</div>
+      <div class="client-box">IPSOS</div>
+      <div class="client-box">COOKUNITY</div>
+      <div class="client-box">TRACKINGTIME</div>
+      <div class="client-box">BSR DIGITAL</div>
+      <div class="client-box">MUVIA AI</div>
+    </div>
+  </section>
+
+  <section class="recognition-band">
+    <div class="rec-kicker" data-i18n="recKicker">INDUSTRY RECOGNITION & JURY CREDENTIALS</div>
+    <div class="rec-main" data-i18n="recMain">
+      <strong>Jurado Oficial en <a href="https://www.fiapawards.com" target="_blank" rel="noopener" style="color: inherit; border-bottom: 1px solid var(--line-strong); text-decoration:none;">FIAP</a></strong> — Festival Iberoamericano de la Publicidad. Evaluando la excelencia en producción, montaje e innovación audiovisual en Iberoamérica y el mercado hispano de EE. UU.
+    </div>
+    <div class="rec-detail" data-i18n="recDetail">
+      21+ Años de Trayectoria<br>Post-Production · Motion · Gen-AI
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-col">
+      <strong>HB CREATIVE STUDIO LLC</strong>
+      <span>© 2005–2026 HERNÁN BUCCINO. ALL RIGHTS RESERVED.</span>
+    </div>
+    <div class="footer-col">
+      <strong data-i18n="footerVenture">CREDENTIALS & VENTURES</strong>
+      <span>FIAP OFFICIAL JURY MEMBER · CO-FOUNDER AT MUVIA</span>
+      <div class="footer-socials">
+        <a href="https://www.linkedin.com" target="_blank" rel="noopener">LINKEDIN ↗</a>
+        <a href="https://www.instagram.com" target="_blank" rel="noopener">INSTAGRAM ↗</a>
+      </div>
+    </div>
+    <div class="footer-right">
+      <a class="footer-link" id="openContactModal" data-i18n="footerCta">INQUIRIES & BOOKINGS ↗</a>
+      <span>UNITED STATES · BUENOS AIRES</span>
+    </div>
+  </footer>
+
+  <div class="screening-room" id="screeningRoom">
+    <div class="screening-topbar">
+      <span class="screening-index" id="modalIndex">PROJECT 01 / 06</span>
+      <div class="screening-controls">
+        <button class="modal-btn" id="prevBtn">← PREV</button>
+        <button class="modal-btn" id="nextBtn">NEXT →</button>
+        <button class="modal-btn" id="closeBtn">CLOSE [ESC]</button>
+      </div>
+    </div>
+
+    <div class="screening-stage">
+      <div class="stage-player" id="stagePlayerContainer"></div>
+      <aside class="stage-dossier">
+        <div>
+          <p class="dossier-label">PROJECT</p>
+          <h3 class="dossier-title" id="modalTitle">Project Title</h3>
+        </div>
+        <div>
+          <p class="dossier-label">CLIENT / PARTNER</p>
+          <p class="dossier-value" id="modalClient">Client Name</p>
+        </div>
+        <div>
+          <p class="dossier-label">CREDITS & DIRECTION</p>
+          <p class="dossier-value" id="modalRole">Role</p>
+        </div>
+        <div>
+          <p class="dossier-label">PIPELINE & TOOLCHAIN</p>
+          <p class="dossier-value" id="modalStack">Tools</p>
+        </div>
+        <div>
+          <p class="dossier-label">PRODUCTION ENTITY</p>
+          <p class="dossier-value">HB Creative Studio LLC</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <div class="contact-modal" id="contactModal">
+    <div class="contact-card">
+      <button class="close-contact" id="closeContactModal">CLOSE [X]</button>
+      <h3 data-i18n="modalContactTitle">Direct Inquiries & Bookings</h3>
+      <p data-i18n="modalContactDesc">Disponible para proyectos de dirección de postproducción, montaje publicitario y consultoría en pipelines de IA generativa a través de HB Creative Studio LLC.</p>
+      <a href="mailto:contacto@hernanbuccino.com" class="mail-cta">contacto@hernanbuccino.com ↗</a>
+      <div class="contact-socials-row">
+        <a href="https://www.linkedin.com" target="_blank" rel="noopener">LinkedIn ↗</a>
+        <a href="https://www.instagram.com" target="_blank" rel="noopener">Instagram ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const cursor = document.getElementById('cursor');
+    const cursorLabel = document.getElementById('cursorLabel');
+    const workGrid = document.getElementById('workGrid');
+    const cells = Array.from(document.querySelectorAll('.project-cell'));
+    const filterTabs = document.querySelectorAll('.filter-tab');
+    const themeToggle = document.getElementById('themeToggle');
+    const grid2Btn = document.getElementById('grid2Btn');
+    const grid3Btn = document.getElementById('grid3Btn');
+
+    const showreelBanner = document.getElementById('showreelBanner');
+    const showreelDrawer = document.getElementById('showreelDrawer');
+    const mainReelIframe = document.getElementById('mainReelIframe');
+    const closeReelDrawer = document.getElementById('closeReelDrawer');
+    const topReelBtn = document.getElementById('topReelBtn');
+
+    const screeningRoom = document.getElementById('screeningRoom');
+    const stagePlayerContainer = document.getElementById('stagePlayerContainer');
+    const modalIndex = document.getElementById('modalIndex');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalClient = document.getElementById('modalClient');
+    const modalRole = document.getElementById('modalRole');
+    const modalStack = document.getElementById('modalStack');
+    const closeBtn = document.getElementById('closeBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    const openContactModal = document.getElementById('openContactModal');
+    const closeContactModal = document.getElementById('closeContactModal');
+    const contactModal = document.getElementById('contactModal');
+
+    const langToggleBtn = document.getElementById('langToggleBtn');
+    let currentLang = 'es';
+
+    const translations = {
+      es: {
+        juryLabel: "HONOR",
+        fiapBadgeText: "JURADO OFICIAL FIAP — FESTIVAL IBEROAMERICANO DE LA PUBLICIDAD ↗",
+        expTag: "· 21+ YEARS OF AUDIOVISUAL DIRECTION & POST-PRODUCTION",
+        heroTitle: "RITMO VISUAL.<br><strong>21 AÑOS EN MOVIMIENTO.</strong>",
+        heroStatement: "Dirección de postproducción, montaje publicitario, motion design y pipelines de <b>Inteligencia Artificial Generativa</b>. Más de dos décadas transformando narrativa audiovisual y evaluando la excelencia creativa internacional como <b>Jurado de FIAP</b>.",
+        reelKicker: "ANTOLOGÍA DESTACADA · 2005—2026",
+        reelHeading: "Ver Director's Cut Showreel General",
+        reelSpecs: "AUDIO COMPLETO · 01:45 MIN · CLIC PARA EXPANDIR ↓",
+        clientsHeader: "CLIENTES SELECCIONADOS & PARTNERS ESTRATÉGICOS",
+        recKicker: "RECONOCIMIENTO & CREDENCIALES",
+        recMain: "<strong>Jurado Oficial en <a href='https://www.fiapawards.com' target='_blank' rel='noopener' style='color: inherit; border-bottom: 1px solid var(--line-strong); text-decoration:none;'>FIAP</a></strong> — Festival Iberoamericano de la Publicidad. Evaluando la excelencia en producción, montaje e innovación audiovisual en Iberoamérica y el mercado hispano de EE. UU.",
+        recDetail: "21+ Años de Trayectoria<br>Post-Production · Motion · Gen-AI",
+        footerVenture: "CREDENCIALES & VENTURES",
+        footerCta: "CONSULTAS & BOOKINGS ↗",
+        modalContactTitle: "Consultas Directas & Bookings",
+        modalContactDesc: "Disponible para proyectos de dirección de postproducción, montaje publicitario y consultoría en pipelines de IA generativa a través de HB Creative Studio LLC."
+      },
+      en: {
+        juryLabel: "HONOR",
+        fiapBadgeText: "OFFICIAL FIAP JURY MEMBER — IBEROAMERICAN ADVERTISING FESTIVAL ↗",
+        expTag: "· 21+ YEARS OF AUDIOVISUAL DIRECTION & POST-PRODUCTION",
+        heroTitle: "VISUAL RHYTHM.<br><strong>21 YEARS IN MOTION.</strong>",
+        heroStatement: "Post-production direction, commercial editing, motion design, and <b>Generative AI Workflows</b>. Over two decades shaping audiovisual storytelling and evaluating international creative excellence as an <b>Official FIAP Jury Member</b>.",
+        reelKicker: "FEATURED ANTHOLOGY · 2005—2026",
+        reelHeading: "Watch Director's Cut General Showreel",
+        reelSpecs: "FULL AUDIO · 01:45 MIN · CLICK TO EXPAND ↓",
+        clientsHeader: "SELECTED CLIENTS & STRATEGIC PARTNERS",
+        recKicker: "INDUSTRY RECOGNITION & JURY CREDENTIALS",
+        recMain: "<strong>Official Jury Member at <a href='https://www.fiapawards.com' target='_blank' rel='noopener' style='color: inherit; border-bottom: 1px solid var(--line-strong); text-decoration:none;'>FIAP</a></strong> — Iberoamerican Advertising Festival. Evaluating production, editing, and audiovisual innovation excellence across Latin America and the US Hispanic market.",
+        recDetail: "21+ Years of Craft<br>Post-Production · Motion · Gen-AI",
+        footerVenture: "CREDENTIALS & VENTURES",
+        footerCta: "INQUIRIES & BOOKINGS ↗",
+        modalContactTitle: "Direct Inquiries & Bookings",
+        modalContactDesc: "Available for post-production direction, commercial editing, and generative AI pipeline consulting through HB Creative Studio LLC."
+      }
+    };
+
+    langToggleBtn.addEventListener('click', () => {
+      currentLang = currentLang === 'es' ? 'en' : 'es';
+      langToggleBtn.textContent = currentLang === 'es' ? 'EN / ES' : 'ES / EN';
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[currentLang][key]) el.innerHTML = translations[currentLang][key];
+      });
+    });
+
+    openContactModal.addEventListener('click', () => contactModal.classList.add('active'));
+    closeContactModal.addEventListener('click', () => contactModal.classList.remove('active'));
+    contactModal.addEventListener('click', (e) => { if (e.target === contactModal) contactModal.classList.remove('active'); });
+
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = `${e.clientX}px`;
+      cursor.style.top = `${e.clientY}px`;
+    });
+
+    function openMainReel() {
+      showreelBanner.classList.add('is-hidden');
+      showreelDrawer.classList.add('is-open');
+      let src = mainReelIframe.src;
+      if (!src.includes('autoplay=1')) mainReelIframe.src = src + '&autoplay=1';
+      showreelDrawer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function closeMainReel() {
+      let src = mainReelIframe.src.replace('&autoplay=1', '').replace('?autoplay=1', '');
+      mainReelIframe.src = src;
+      showreelDrawer.classList.remove('is-open');
+      showreelBanner.classList.remove('is-hidden');
+    }
+
+    showreelBanner.addEventListener('mouseenter', () => { cursorLabel.textContent = 'REEL'; cursor.classList.add('is-hovering'); });
+    showreelBanner.addEventListener('mouseleave', () => { cursor.classList.remove('is-hovering'); });
+    showreelBanner.addEventListener('click', openMainReel);
+    topReelBtn.addEventListener('click', () => { if (showreelDrawer.classList.contains('is-open')) closeMainReel(); else openMainReel(); });
+    closeReelDrawer.addEventListener('click', closeMainReel);
+
+    cells.forEach((cell, idx) => {
+      const video = cell.querySelector('video');
+      const scrubber = cell.querySelector('.scrubber-fill');
+
+      cell.addEventListener('mouseenter', () => {
+        cursorLabel.textContent = 'EXPAND';
+        cursor.classList.add('is-hovering');
+        workGrid.classList.add('is-dimmed');
+        video.play().catch(() => {});
+      });
+
+      cell.addEventListener('mouseleave', () => {
+        cursor.classList.remove('is-hovering');
+        workGrid.classList.remove('is-dimmed');
+        video.pause();
+        video.currentTime = 0;
+        scrubber.style.width = '0%';
+      });
+
+      video.addEventListener('timeupdate', () => {
+        if (video.duration) scrubber.style.width = `${(video.currentTime / video.duration) * 100}%`;
+      });
+
+      cell.addEventListener('click', () => { closeMainReel(); openScreening(idx); });
+    });
+
+    let currentProjectIndex = 0;
+    function openScreening(index) {
+      currentProjectIndex = index;
+      const cell = cells[index];
+
+      modalIndex.textContent = `PROJECT ${cell.dataset.index}`;
+      modalTitle.textContent = cell.dataset.title;
+      modalClient.textContent = cell.dataset.client;
+      modalRole.textContent = cell.dataset.role;
+      modalStack.textContent = cell.dataset.stack;
+
+      const videoUrl = cell.dataset.videoUrl;
+      stagePlayerContainer.innerHTML = `<iframe src="${videoUrl}&autoplay=1" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+      screeningRoom.classList.add('active');
+    }
+
+    function closeScreening() { screeningRoom.classList.remove('active'); stagePlayerContainer.innerHTML = ''; }
+
+    closeBtn.addEventListener('click', closeScreening);
+    prevBtn.addEventListener('click', () => openScreening((currentProjectIndex - 1 + cells.length) % cells.length));
+    nextBtn.addEventListener('click', () => openScreening((currentProjectIndex + 1) % cells.length));
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (screeningRoom.classList.contains('active')) closeScreening();
+        if (showreelDrawer.classList.contains('is-open')) closeMainReel();
+        if (contactModal.classList.contains('active')) contactModal.classList.remove('active');
+      }
+      if (!screeningRoom.classList.contains('active')) return;
+      if (e.key === 'ArrowRight') nextBtn.click();
+      if (e.key === 'ArrowLeft') prevBtn.click();
+    });
+
+    filterTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        filterTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const filter = tab.dataset.filter;
+        cells.forEach(cell => {
+          if (filter === 'all' || cell.dataset.category.includes(filter)) cell.classList.remove('hidden');
+          else cell.classList.add('hidden');
+        });
+      });
+    });
+
+    grid2Btn.addEventListener('click', () => { workGrid.classList.remove('cols-3'); grid2Btn.classList.add('active'); grid3Btn.classList.remove('active'); });
+    grid3Btn.addEventListener('click', () => { workGrid.classList.add('cols-3'); grid3Btn.classList.add('active'); grid2Btn.classList.remove('active'); });
+
+    themeToggle.addEventListener('click', () => {
+      const root = document.documentElement;
+      const isDark = root.getAttribute('data-theme') === 'dark';
+      root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    });
+  </script>
+</body>
+</html>
